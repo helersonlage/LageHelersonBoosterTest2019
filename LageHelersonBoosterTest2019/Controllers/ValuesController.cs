@@ -2,43 +2,47 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LageHelersonBoosterTest2019.Model;
+using LageHelersonBoosterTest2019.Service;
+using LageHelersonBoosterTest2019.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LageHelersonBoosterTest2019.Controllers
 {
-    [Route("api/[controller]")]
+    //[Route("api/[controller]")]
     public class ValuesController : Controller
     {
-        // GET api/values
+
+        private readonly IDataService dataService;
+        private readonly ILorumIpsumDataModel lorumIpsumDataModel;
+
+        public ValuesController(ILorumIpsumDataModel lorumIpsumDataModel, IDataService dataService)
+        {
+            this.dataService =  dataService;
+            this.lorumIpsumDataModel = lorumIpsumDataModel;
+        }
+
         [HttpGet]
-        public IEnumerable<string> Get()
+        [Route("api/GetlorumIpsumDetails")]
+        public ActionResult Getdata()
         {
-            return new string[] { "value1", "value2" };
+
+            var dataStream = lorumIpsumDataModel.LoadDataLorumIpsum();
+            var dataString = dataService.StreamToString(dataStream);
+            var words = dataService.GetWordDetail(dataString);
+
+            var result = new LorumIpsumDetailsViewModel
+            {
+                TotalWords = words.Count(),
+                Totalcharacters = words.Sum(a => a.Length),
+                Top5largestWord = words.OrderByDescending(a => a.Length).Take(5).Select(w => w.Word).ToList(),
+                Top5SmallestWord = words.OrderBy(a => a.Length).Take(5).Select(w => w.Word).ToList(),
+
+            };
+            return Ok(Json(result));
+
+
         }
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/values
-        [HttpPost]
-        public void Post([FromBody]string value)
-        {
-        }
-
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }

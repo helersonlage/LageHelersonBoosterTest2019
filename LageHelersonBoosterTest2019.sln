@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27703.2000
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LageHelersonBoosterTest2019", "LageHelersonBoosterTest2019\LageHelersonBoosterTest2019.csproj", "{DE4AC085-9030-4ADA-8DC4-64EA95A3B9CF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XUnitTestProjectBooster", "XUnitTestProjectBooster\XUnitTestProjectBooster.csproj", "{4EDB5A8C-D663-4432-981E-D29FC5611430}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{DE4AC085-9030-4ADA-8DC4-64EA95A3B9CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE4AC085-9030-4ADA-8DC4-64EA95A3B9CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE4AC085-9030-4ADA-8DC4-64EA95A3B9CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4EDB5A8C-D663-4432-981E-D29FC5611430}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4EDB5A8C-D663-4432-981E-D29FC5611430}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4EDB5A8C-D663-4432-981E-D29FC5611430}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4EDB5A8C-D663-4432-981E-D29FC5611430}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

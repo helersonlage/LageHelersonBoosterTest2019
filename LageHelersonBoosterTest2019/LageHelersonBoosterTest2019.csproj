@@ -16,4 +16,13 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="DevTest">
+      <HintPath>..\..\..\Temp\NET Development Test v5\.NET Development Test v5\DevTest.dll</HintPath>
+    </Reference>
+    <Reference Include="NLipsum.Core">
+      <HintPath>..\..\..\Temp\NET Development Test v5\.NET Development Test v5\NLipsum.Core.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
