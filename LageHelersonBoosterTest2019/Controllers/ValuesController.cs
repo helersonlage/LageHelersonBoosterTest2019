@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using LageHelersonBoosterTest2019.Model;
 using LageHelersonBoosterTest2019.Service;
 using LageHelersonBoosterTest2019.ViewModel;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LageHelersonBoosterTest2019.Controllers
@@ -18,30 +19,37 @@ namespace LageHelersonBoosterTest2019.Controllers
 
         public ValuesController(ILorumIpsumDataModel lorumIpsumDataModel, IDataService dataService)
         {
-            this.dataService =  dataService;
+            this.dataService = dataService;
             this.lorumIpsumDataModel = lorumIpsumDataModel;
         }
 
         [HttpGet]
         [Route("api/GetlorumIpsumDetails")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult Getdata()
         {
-
-            var dataStream = lorumIpsumDataModel.LoadDataLorumIpsum();
-            var dataString = dataService.StreamToString(dataStream);
-            var words = dataService.GetWordDetail(dataString);
-
-            var result = new LorumIpsumDetailsViewModel
+            try
             {
-                TotalWords = words.Count(),
-                Totalcharacters = words.Sum(a => a.Length),
-                Top5largestWord = words.OrderByDescending(a => a.Length).Take(5).Select(w => w.Word).ToList(),
-                Top5SmallestWord = words.OrderBy(a => a.Length).Take(5).Select(w => w.Word).ToList(),
+                var dataStream = lorumIpsumDataModel.LoadDataLorumIpsum();
+                var dataString = dataService.StreamToString(dataStream);
+                var words = dataService.GetWordDetail(dataString);
 
-            };
-            return Ok(Json(result));
+                var result = new LorumIpsumDetailsViewModel
+                {
+                    TotalWords = words.Sum(a => a.Frequency),
+                    Totalcharacters = words.Sum(a => a.Length * a.Frequency),
+                    FivelargestWord = words.OrderByDescending(a => a.Length).Take(5).Select(w => w.Word).ToList(),
+                    FiveSmallestWord = words.OrderBy(a => a.Length).Take(5).Select(w => w.Word).ToList(),
+                    TenMostFrequentlyWord = words.OrderByDescending(a => a.Frequency).Take(10).Select(w => w.Word).ToList(),
 
+                };
 
+                return Ok(value: Json(result));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
     }
