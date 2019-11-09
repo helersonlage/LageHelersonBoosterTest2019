@@ -1,18 +1,14 @@
-﻿using System;
-using System.IO;
+﻿using LageHelersonBoosterTest2019.Entity;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DevTest;
+using System.IO;
 using System.Text;
-using LageHelersonBoosterTest2019.Entity;
 using System.Text.RegularExpressions;
 
 namespace LageHelersonBoosterTest2019.Service
 {
     public class DataService : IDataService
     {
-
         /// <summary>
         /// Converter Stream Reader to String
         /// </summary>
@@ -43,13 +39,17 @@ namespace LageHelersonBoosterTest2019.Service
             return builder.ToString();
         }
 
-
+        /// <summary>
+        ///  Get a word list 
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns> word, frequency, length</returns>
         public List<WordDetail> GetWordDetail(string text)
         {
             WordDetail word;
-            //Length word Frequencies
+            //Length and word Frequencies
             var words = new List<WordDetail>();             
-            var wordFrequencies = GetWordFrequency(text);
+            var wordFrequencies = GetWordsFrequency(text);
 
             foreach (var item in wordFrequencies)
             {
@@ -64,13 +64,12 @@ namespace LageHelersonBoosterTest2019.Service
             return words;
         }
 
-
         /// <summary>
-        /// Create a word and frequency dictionary
+        /// Get word frequency
         /// </summary>
         /// <param name="text">text to analise</param>
         /// <returns>Dictionary<string, int> word and frequency</returns>
-        public Dictionary<string, int> GetWordFrequency(string text)
+        public Dictionary<string, int> GetWordsFrequency(string text)
         {
             var dictWords = new Dictionary<string, int>(StringComparer.CurrentCultureIgnoreCase);
             var wordPattern = new Regex(@"\w+");
@@ -84,6 +83,29 @@ namespace LageHelersonBoosterTest2019.Service
                 dictWords[match.Value] = currentCount;
             }
             return dictWords;
+        }
+
+        /// <summary>
+        ///  Get characters frequency 
+        /// </summary>       
+        public Dictionary<string, int> GetCharactersFrequency(string text)
+        {
+            var dicLetters = new Dictionary<string, int>(StringComparer.CurrentCultureIgnoreCase);
+
+            text = text.Replace(System.Environment.NewLine, string.Empty).Replace(" ", string.Empty);
+
+            foreach (char c in text)
+            {
+                int currentCount = 0;
+
+                dicLetters.TryGetValue(c.ToString().ToLower(), out currentCount);
+
+                currentCount++;
+                dicLetters[c.ToString()] = currentCount;
+
+            }
+
+            return dicLetters;
         }
 
         /// <summary>
