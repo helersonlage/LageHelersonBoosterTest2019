@@ -24,36 +24,42 @@ namespace LageHelersonBoosterTest2019.Controllers
 
 
         /// <summary>
-        /// This api gets information about the Lorum Ipsum text: 
+        ///  Get Lorum Ipsum text Info: 
         /// </summary>
+        /// <param name="WhiteSpaceIsChar">Considers white space as character.</param>
         /// <returns>
         ///  •	Total number of characters and words. 
         ///  •	The 5 largest and 5 smallest words. 
         ///  •	10 most frequently used words.
         ///  •	List showing all the characters used in the text and the number of times they appear sorted in descending order.
-        /// </returns>
+        /// </returns> 
+        /// <response code="200">Successfully returns text info</response>
+        /// <response code="500">Internal Server Error</response> 
         [HttpGet]
         [Route("api/GetTextInfo")]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Getdata()
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult Getdata(bool WhiteSpaceIsChar = false)
         {
-
             try
             {
+
                 var dataStream = lorumIpsumDataModel.LoadDataLorumIpsum();
+                // convert Data Stream to String
                 var dataString = dataService.StreamToString(dataStream);
-                var words = dataService.GetWordDetail(dataString);
+                //  When blank space considered a character get a total.
+                int totalWhiteSpace = WhiteSpaceIsChar ? dataString.Count(Char.IsWhiteSpace) : 0;
+                var words = dataService.GetWordDetail(dataString).OrderByDescending(o => o.Length);
                 var chars = dataService.GetCharactersFrequency(dataString);
 
                 var result = new LorumIpsumDetailsViewModel
                 {
                     TotalWords = words.Sum(a => a.Frequency),
-                    Totalcharacters = chars.Sum(s => s.Value),
-                    FivelargestWord = words.OrderByDescending(a => a.Length).Take(5).Select(w => w.Word).ToList(),
-                    FiveSmallestWord = words.OrderBy(a => a.Length).Take(5).Select(w => w.Word).ToList(),
-                    TenMostFrequentlyWord = words.OrderByDescending(a => a.Frequency).Take(10).Select(w => w.Word).ToList(),
+                    Totalcharacters = chars.Sum(s => s.Value) + totalWhiteSpace,
+                    FivelargestWords = words.Take(5).Select(w => w.Word).ToList(),
+                    FiveSmallestWords = words.TakeLast(5).Select(w => w.Word).ToList(),
+                    TenMostFrequentlyWords = words.OrderByDescending(a => a.Frequency).Take(10).Select(w => w.Word).ToList(),
                     Characters = chars.AsQueryable().Select(c => new Entity.Character { Char = c.Key, Frequency = c.Value }).OrderByDescending(o => o.Frequency).ToList()
                 };
 
@@ -61,7 +67,8 @@ namespace LageHelersonBoosterTest2019.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                //retorna error 500 
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 

@@ -47,8 +47,7 @@ namespace LageHelersonBoosterTest2019.Service
         public List<WordDetail> GetWordDetail(string text)
         {
             WordDetail word;
-            //Length and word Frequencies
-            var words = new List<WordDetail>();             
+            var words = new List<WordDetail>();
             var wordFrequencies = GetWordsFrequency(text);
 
             foreach (var item in wordFrequencies)
@@ -71,12 +70,13 @@ namespace LageHelersonBoosterTest2019.Service
         /// <returns>Dictionary<string, int> word and frequency</returns>
         public Dictionary<string, int> GetWordsFrequency(string text)
         {
+            int currentCount;
             var dictWords = new Dictionary<string, int>(StringComparer.CurrentCultureIgnoreCase);
             var wordPattern = new Regex(@"\w+");
 
             foreach (Match match in wordPattern.Matches(text))
             {
-                int currentCount = 0;
+                currentCount = 0;
                 dictWords.TryGetValue(match.Value.ToLower(), out currentCount);
 
                 currentCount++;
@@ -90,14 +90,16 @@ namespace LageHelersonBoosterTest2019.Service
         /// </summary>       
         public Dictionary<string, int> GetCharactersFrequency(string text)
         {
+            int currentCount;
             var dicLetters = new Dictionary<string, int>(StringComparer.CurrentCultureIgnoreCase);
-
-            text = text.Replace(System.Environment.NewLine, string.Empty).Replace(" ", string.Empty);
 
             foreach (char c in text)
             {
-                int currentCount = 0;
+                // Ignore white space
+                if (char.IsWhiteSpace(c))
+                    continue;
 
+                currentCount = 0;
                 dicLetters.TryGetValue(c.ToString().ToLower(), out currentCount);
 
                 currentCount++;

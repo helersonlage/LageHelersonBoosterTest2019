@@ -5,10 +5,6 @@ using System.IO;
 using System.Linq;
 using Xunit;
 
-
-namespace TestProjectBooster.Service
-{
-
     public class DataServiceTest
     {
        private readonly IDataService dataService;
@@ -34,6 +30,7 @@ namespace TestProjectBooster.Service
             //act
             var result = dataService.StreamToString(streamReader);
 
+            result = result;
             //assert
             Assert.Equal(datastring, result);
 
@@ -44,7 +41,7 @@ namespace TestProjectBooster.Service
         [InlineData("New", 3)]
         [InlineData("Zealand", 7)]
         [InlineData("Milano ", 6)]
-        [InlineData("Pneumonoultramicroscopicsilicovolcanoconiosis  ", 45)]
+        [InlineData(" Pneumonoultramicroscopicsilicovolcanoconiosis  ", 45)]
         [InlineData("Pseudopseudohypoparathyroidism", 30)]
         [InlineData(" ", 0)]
         [InlineData("", 0)]
@@ -94,7 +91,7 @@ namespace TestProjectBooster.Service
             };
 
             //arrange  
-            var text = "geeks for GEeKs";
+            var text = " geeks for GEeKs ";
 
             //act         
             var result = dataService.GetCharactersFrequency(text);
@@ -102,9 +99,7 @@ namespace TestProjectBooster.Service
             //assert    
             Assert.Equal(7, result.Count());
             Assert.Equal(expectedResult, result);
-
         }
-
 
         [Fact]
         public void Should_Load_Word_Frenquency_Lenght()
@@ -151,4 +146,4 @@ namespace TestProjectBooster.Service
         }
         #endregion
     }
-}
+
