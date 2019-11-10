@@ -8,8 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LageHelersonBoosterTest2019.Controllers
-{
-    //[Route("api/[controller]")]
+{    
     public class LorumIpsumController : Controller
     {
 
@@ -52,7 +51,7 @@ namespace LageHelersonBoosterTest2019.Controllers
                 int totalWhiteSpace = WhiteSpaceIsChar ? dataString.Count(Char.IsWhiteSpace) : 0;
                 var words = dataService.GetWordDetail(dataString).OrderByDescending(o => o.Length);
                 var chars = dataService.GetCharactersFrequency(dataString);
-
+                //Create View Model 
                 var result = new LorumIpsumDetailsViewModel
                 {
                     TotalWords = words.Sum(a => a.Frequency),
@@ -63,7 +62,7 @@ namespace LageHelersonBoosterTest2019.Controllers
                     Characters = chars.AsQueryable().Select(c => new Entity.Character { Char = c.Key, Frequency = c.Value }).OrderByDescending(o => o.Frequency).ToList()
                 };
 
-                return Ok(value: Json(result));
+                return Ok(result);
             }
             catch (Exception ex)
             {

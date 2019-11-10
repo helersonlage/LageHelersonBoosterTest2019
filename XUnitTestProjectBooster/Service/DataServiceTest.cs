@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using TestProjectBooster.Common;
 using Xunit;
 
     public class DataServiceTest
@@ -25,15 +26,13 @@ using Xunit;
         public void Should_Convert_StreamReader_To_String(string datastring)
         {
             //arrange                    
-            StreamReader streamReader = GenerateStreamReaderFromString(datastring);
+            StreamReader streamReader = Common.GenerateStreamReaderFromString(datastring);
 
             //act
             var result = dataService.StreamToString(streamReader);
-
-            result = result;
+            
             //assert
             Assert.Equal(datastring, result);
-
         }
 
 
@@ -73,7 +72,6 @@ using Xunit;
             Assert.Equal("three", result.ElementAt(2).Key.ToLower());
             Assert.Equal(3, result.ElementAt(2).Value);
         }
-
 
         [Fact]
         public void Should_Return_characters_And_Frequencies()
@@ -131,19 +129,6 @@ using Xunit;
             Assert.Equal(4, result[3].Frequency);
 
         }
-
-
-        #region private methods
-        private static StreamReader GenerateStreamReaderFromString(string s)
-        {
-            var stream = new MemoryStream();
-            var writer = new StreamWriter(stream);
-            writer.Write(s);
-            writer.Flush();
-            stream.Position = 0;
-
-            return new StreamReader(stream);
-        }
-        #endregion
+      
     }
 
